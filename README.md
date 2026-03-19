@@ -49,12 +49,9 @@ python manage.py runserver
 ```
 
 ## Environment Setup Done
-✅ Django 6.0.3 configured  
-✅ Django REST Framework installed  
-✅ JWT authentication (djangorestframework-simplejwt)  
-✅ CORS headers enabled  
-✅ Database migrations applied  
-✅ Sample data loaded  
-
-## Next Phase
-→ Create React frontend with Vite
+Django 6.0.3 configured  
+Django REST Framework installed  
+JWT authentication (djangorestframework-simplejwt)  
+CORS headers enabled  
+Database migrations applied  
+Sample data loaded  
