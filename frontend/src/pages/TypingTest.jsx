@@ -36,7 +36,7 @@ function TypingTest() {
   const loadWordLists = async () => {
     try {
       const response = await wordListAPI.getAll();
-      setWordLists(response.data);
+      setWordLists(response.data.results || response.data);
       setLoading(false);
     } catch (err) {
       console.error('Failed to load word lists:', err);
