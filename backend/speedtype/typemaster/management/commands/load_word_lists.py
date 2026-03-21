@@ -6,64 +6,43 @@ class Command(BaseCommand):
     help = 'Load sample word lists for testing'
     
     def handle(self, *args, **options):
-        # Sample word lists
+        # Sentences split into words arrays
         word_lists = [
             {
-                'name': 'Common English Words - Easy',
-                'description': 'Basic everyday English words',
+                'name': 'Easy Paragraph 1',
+                'description': 'A simple sentence about a fox',
                 'difficulty': 'easy',
-                'words': [
-                    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
-                    'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
-                    'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
-                    'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
-                    'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me'
-                ]
+                'words': "The quick brown fox jumps over the lazy dog.".split()
             },
             {
-                'name': 'Intermediate Vocabulary',
-                'description': 'Moderate difficulty English words',
+                'name': 'Easy Paragraph 2',
+                'description': 'A simple sentence about weather',
+                'difficulty': 'easy',
+                'words': "It was a bright cold day in April, and the clocks were striking thirteen.".split()
+            },
+            {
+                'name': 'Medium Paragraph 1',
+                'description': 'A paragraph about programming',
                 'difficulty': 'medium',
-                'words': [
-                    'programming', 'computer', 'technology', 'development', 'interface', 
-                    'database', 'network', 'security', 'application', 'algorithm',
-                    'framework', 'library', 'function', 'variable', 'constant',
-                    'debugging', 'testing', 'deployment', 'documentation', 'repository',
-                    'performance', 'optimization', 'implementation', 'architecture', 'scalability',
-                    'communication', 'collaboration', 'innovation', 'integration', 'automation',
-                    'maintenance', 'debugging', 'refactoring', 'compatibility', 'reliability',
-                    'availability', 'security', 'encryption', 'authentication', 'authorization',
-                    'configuration', 'environment', 'template', 'protocol', 'specification'
-                ]
+                'words': "Programming is the art of writing instructions for computers. It requires logical thinking, creativity, and patience. Many people find it to be a rewarding career path because building software can solve complex real-world problems.".split()
             },
             {
-                'name': 'Advanced Technical Terms',
-                'description': 'Complex programming and technical terminology',
+                'name': 'Medium Paragraph 2',
+                'description': 'A paragraph from literature',
+                'difficulty': 'medium',
+                'words': "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.".split()
+            },
+            {
+                'name': 'Hard Paragraph 1',
+                'description': 'A complex technical explanation',
                 'difficulty': 'hard',
-                'words': [
-                    'microservices', 'containerization', 'orchestration', 'virtualization',
-                    'asynchronous', 'synchronization', 'concurrency', 'parallelization',
-                    'polymorphism', 'encapsulation', 'inheritance', 'abstraction',
-                    'authentication', 'authorization', 'encryption', 'cryptography',
-                    'deserialization', 'serialization', 'marshalling', 'unmarshalling',
-                    'idempotency', 'immutability', 'consistency', 'availability',
-                    'latency', 'throughput', 'bandwidth', 'jitter',
-                    'normalization', 'denormalization', 'sharding', 'replication',
-                    'compilation', 'interpretation', 'transpilation', 'instrumentation',
-                    'agile', 'scrum', 'sprint', 'retrospective', 'refactoring', 'deprecation'
-                ]
+                'words': "In software engineering, asynchronous programming allows non-blocking execution of computational tasks. This architecture minimizes latency and maximizes throughput, particularly in heavily concurrent microservices environments where network overhead and distributed data consistency become significant bottlenecks.".split()
             },
             {
-                'name': 'Programming Languages',
-                'description': 'Popular programming language names',
-                'difficulty': 'medium',
-                'words': [
-                    'python', 'javascript', 'java', 'csharp', 'cplusplus', 'ruby',
-                    'php', 'golang', 'rust', 'kotlin', 'swift', 'objective', 'perl',
-                    'scala', 'haskell', 'clojure', 'elixir', 'erlang', 'lua',
-                    'typescript', 'coffeescript', 'dart', 'groovy', 'r', 'matlab',
-                    'fortran', 'assembly', 'basic', 'pascal', 'ada', 'cobol'
-                ]
+                'name': 'Hard Paragraph 2',
+                'description': 'An advanced scientific paragraph',
+                'difficulty': 'hard',
+                'words': "Quantum mechanics represents a fundamental shift from classical physics, proposing that energy, momentum, and other quantities of a bound system are restricted to discrete values. The wave-particle duality and uncertainty principle fundamentally characterize these phenomena at microscopic scales.".split()
             },
         ]
         
