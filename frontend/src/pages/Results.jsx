@@ -7,6 +7,7 @@ function Results() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('recent');
+  const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
 
   useEffect(() => {
     loadResults();
@@ -33,6 +34,24 @@ function Results() {
     }
   };
 
+  const handleSort = (key) => {
+    let direction = 'desc';
+    if (sortConfig.key === key && sortConfig.direction === 'desc') {
+      direction = 'asc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedResults = [...results].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
   if (loading) {
     return <div className="results-page"><p>Loading...</p></div>;
   }
@@ -44,19 +63,28 @@ function Results() {
       <div className="results-filters">
         <button
           className={`filter-btn ${filter === 'recent' ? 'active' : ''}`}
-          onClick={() => setFilter('recent')}
+          onClick={() => {
+            setFilter('recent');
+            setSortConfig({ key: 'created_at', direction: 'desc' });
+          }}
         >
           Recent
         </button>
         <button
           className={`filter-btn ${filter === 'best-wpm' ? 'active' : ''}`}
-          onClick={() => setFilter('best-wpm')}
+          onClick={() => {
+            setFilter('best-wpm');
+            setSortConfig({ key: 'wpm', direction: 'desc' });
+          }}
         >
           Best WPM
         </button>
         <button
           className={`filter-btn ${filter === 'best-accuracy' ? 'active' : ''}`}
-          onClick={() => setFilter('best-accuracy')}
+          onClick={() => {
+            setFilter('best-accuracy');
+            setSortConfig({ key: 'accuracy', direction: 'desc' });
+          }}
         >
           Best Accuracy
         </button>
@@ -73,17 +101,31 @@ function Results() {
           <table className="results-table">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>WPM</th>
-                <th>Accuracy</th>
-                <th>Raw WPM</th>
-                <th>Mistakes</th>
-                <th>Time Penalty</th>
-                <th>Duration</th>
+                <th onClick={() => handleSort('created_at')} style={{cursor: 'pointer'}}>
+                  Date {sortConfig.key === 'created_at' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('wpm')} style={{cursor: 'pointer'}}>
+                  WPM {sortConfig.key === 'wpm' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('accuracy')} style={{cursor: 'pointer'}}>
+                  Accuracy {sortConfig.key === 'accuracy' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('raw_wpm')} style={{cursor: 'pointer'}}>
+                  Raw WPM {sortConfig.key === 'raw_wpm' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('mistakes_count')} style={{cursor: 'pointer'}}>
+                  Mistakes {sortConfig.key === 'mistakes_count' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('time_penalty_seconds')} style={{cursor: 'pointer'}}>
+                  Time Penalty {sortConfig.key === 'time_penalty_seconds' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th onClick={() => handleSort('adjusted_duration')} style={{cursor: 'pointer'}}>
+                  Duration {sortConfig.key === 'adjusted_duration' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
               </tr>
             </thead>
             <tbody>
-              {results.map((result) => (
+              {sortedResults.map((result) => (
                 <tr key={result.id} className={result.passed ? 'passed' : 'failed'}>
                   <td>{new Date(result.created_at).toLocaleDateString()} {new Date(result.created_at).toLocaleTimeString()}</td>
                   <td className="wpm-value">{result.wpm.toFixed(2)}</td>

@@ -83,7 +83,7 @@ function TypingTest() {
     }, 1000);
   };
 
-  const endTest = async () => {
+  const endTest = async (finalStats = stats, finalWordIndex = currentWordIndex) => {
     setTestStarted(false);
     setTestCompleted(true);
 
@@ -92,27 +92,27 @@ function TypingTest() {
     }
 
     // Calculate final WPM and accuracy
-    const adjustedDuration = (originalTimeLeft - stats.timePenalty) / 60;
-    const rawWPM = (stats.totalCharacters / 5) / (originalTimeLeft / 60);
-    const finalWPM = (stats.correctCharacters / 5) / (adjustedDuration > 0 ? adjustedDuration : 0.1);
-    const accuracy = stats.totalCharacters > 0 
-      ? (stats.correctCharacters / stats.totalCharacters) * 100 
+    const adjustedDuration = (originalTimeLeft - finalStats.timePenalty) / 60;
+    const rawWPM = (finalStats.totalCharacters / 5) / (originalTimeLeft / 60);
+    const finalWPM = (finalStats.correctCharacters / 5) / (adjustedDuration > 0 ? adjustedDuration : 0.1);
+    const accuracy = finalStats.totalCharacters > 0 
+      ? (finalStats.correctCharacters / finalStats.totalCharacters) * 100 
       : 0;
 
     const testResult = {
       word_list: selectedList.id,
       duration_seconds: originalTimeLeft,
       test_mode: 'time',
-      words_typed: currentWordIndex,
-      correct_characters: stats.correctCharacters,
-      incorrect_characters: stats.incorrectCharacters,
-      total_characters_attempted: stats.totalCharacters,
+      words_typed: finalWordIndex,
+      correct_characters: finalStats.correctCharacters,
+      incorrect_characters: finalStats.incorrectCharacters,
+      total_characters_attempted: finalStats.totalCharacters,
       wpm: Math.max(0, finalWPM),
       raw_wpm: Math.max(0, rawWPM),
       accuracy: Math.min(100, Math.max(0, accuracy)),
-      mistakes_count: stats.mistakes,
-      time_penalty_seconds: stats.timePenalty,
-      adjusted_duration: Math.max(0, originalTimeLeft - stats.timePenalty),
+      mistakes_count: finalStats.mistakes,
+      time_penalty_seconds: finalStats.timePenalty,
+      adjusted_duration: Math.max(0, originalTimeLeft - finalStats.timePenalty),
       passed: accuracy > 75,
       completed: true,
       notes: '',
@@ -151,10 +151,15 @@ function TypingTest() {
       }
     });
 
-    // Check if space is pressed to move to next word
-    if (input.endsWith(' ')) {
+    // Check if space is pressed to move to next word, or if last word is typed completely
+    const isLastWord = currentWordIndex === words.length - 1;
+    const isLastWordComplete = isLastWord && input === currentWord;
+
+    if (input.endsWith(' ') || isLastWordComplete) {
       const typedWord = input.trim();
       const isCorrect = typedWord === currentWord;
+
+      let finalStatsUpdated;
 
       setStats((prev) => {
         const newStats = { ...prev };
@@ -171,11 +176,20 @@ function TypingTest() {
           }
         }
         newStats.totalCharacters += typedWord.length;
+        finalStatsUpdated = newStats;
         return newStats;
       });
 
-      setCurrentWordIndex((prev) => (prev + 1) % words.length);
-      setUserInput('');
+      if (isLastWord) {
+        setUserInput(typedWord);
+        // Delay endTest just slightly so setStats state flush doesn't race 
+        setTimeout(() => {
+          endTest(finalStatsUpdated, currentWordIndex + 1);
+        }, 0);
+      } else {
+        setCurrentWordIndex((prev) => (prev + 1) % words.length);
+        setUserInput('');
+      }
     }
   };
 
